@@ -1,0 +1,89 @@
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+default
+bcm2835 HDMI 1: - (hw:0,0)
+bcm2835 Headphones: - (hw:1,0)
+USB PnP Sound Device: Audio (hw:2,0)
+sysdefault
+lavrate
+samplerate
+speexrate
+pulse
+upmix
+vdownmix
+dmix
+default
