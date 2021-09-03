@@ -14,11 +14,7 @@ samp_rate = 44100 # 44.1kHz sampling rate
 chunk = 4096 # 2^12 samples for buffer
 record_secs = 10 # seconds to record
 dev_index = 1 # device index found by p.get_device_info_by_index(ii)
-wav_output_filename = 'test1.wav' # name of .wav file
 
-wav_output_filename2 = 'tt1.wav' # name of .wav file
-
-print(type(wav_output_filename2))
 
 RATE = 44100  
 INPUT_BLOCK_TIME = 0.01
@@ -66,8 +62,6 @@ build_new_file_exists = False
 
 filename_audio = ""
 
-print(filename_audio)
-print(type(filename_audio))
 while True:
     
     data = stream.read(INPUT_FRAMES_PER_BLOCK)
@@ -94,7 +88,7 @@ while True:
     elif(append_en_timeout == True and (count <= threshold_flag_when_trigger + mute_tolerance )) :
         frames.append(data)
 
-    if(count > threshold_flag_when_trigger + mute_tolerance):
+    if(count > threshold_flag_when_trigger + mute_tolerance and len(frames)!= 0):
         append_en_timeout = False
         # save the audio frames as .wav file
         print("New file saved: ", filename_audio)
@@ -107,6 +101,7 @@ while True:
         frames.clear()
         build_new_file_exists = False
         count = 0
+        threshold_flag = False
 
     count +=1
     #if(count >seconds_to_sample):
