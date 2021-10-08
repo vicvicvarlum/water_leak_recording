@@ -5,6 +5,8 @@
 user_folder_name = 'victor'
 #seconds of tolerance to continue adding samples after the threshold has been reached
 user_mute_tolerance = 10
+#RMS Threshold
+THRESHOLD = 0.05
 
 from typing import Tuple
 import pyaudio
@@ -79,7 +81,6 @@ def get_rms(block):
 
 
 rms_val = 0.0 #Placeholder to store rms converted val from chunk*sample_rate
-THRESHOLD = 0.03 #RMS Threshold for recording
 count = 0 # loop iteration 
 
 seconds_to_sample = 20 * 100 #in seconds first arg
