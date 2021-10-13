@@ -7,6 +7,8 @@ user_folder_name = 'victor'
 user_mute_tolerance = 10
 #RMS Threshold
 THRESHOLD = 0.05
+#Min recording lenght (seconds), avoids false triggers
+REC_LENGHT = 30
 
 from typing import Tuple
 import pyaudio
@@ -25,6 +27,7 @@ dev_index = 1 # device index found by p.get_device_info_by_index(ii)
 
 errorcount = 0
 
+USER_REC_LENGHT = 30 * 100
 
 RATE = 44100  
 INPUT_BLOCK_TIME = 0.01
@@ -138,20 +141,27 @@ while True:
         
 
     if(count > threshold_flag_when_trigger + mute_tolerance and len(frames)!= 0):
-        append_en_timeout = False
-        # save the audio frames as .wav file
-
-        wavefile = wave.open(user_folder_name+'/'+filename_audio,'wb')
-        wavefile.setnchannels(chans)
-        wavefile.setsampwidth(audio.get_sample_size(form_1))
-        wavefile.setframerate(samp_rate)
-        wavefile.writeframes(b''.join(frames))
-        wavefile.close()
-        print("New file saved: ", filename_audio)
-        frames.clear()
-        build_new_file_exists = False
-        count = 0
-        threshold_flag = False
+        if count > USER_REC_LENGHT:
+            append_en_timeout = False
+            # save the audio frames as .wav file
+            wavefile = wave.open(user_folder_name+'/'+filename_audio,'wb')
+            wavefile.setnchannels(chans)
+            wavefile.setsampwidth(audio.get_sample_size(form_1))
+            wavefile.setframerate(samp_rate)
+            wavefile.writeframes(b''.join(frames))
+            wavefile.close()
+            print("New file saved: ", filename_audio, count)
+            frames.clear()
+            build_new_file_exists = False
+            count = 0
+            threshold_flag = False
+        else:
+            print("No file created, false trigger", count)
+            frames.clear()
+            build_new_file_exists = False
+            count = 0
+            threshold_flag = False
+            append_en_timeout = False
 
     count +=1
     #if(count >seconds_to_sample):
