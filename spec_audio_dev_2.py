@@ -2,7 +2,7 @@
 #pipwin install pyaudio
 
 #User folder to be created/store the files, dont use blank spaces
-user_folder_name = 'victor'
+user_folder_name = 'wilber'
 #seconds of tolerance to continue adding samples after the threshold has been reached
 user_mute_tolerance = 5
 #RMS Threshold
@@ -17,6 +17,7 @@ import math
 import struct
 import time
 import os, errno
+from ftplib import FTP
 
 form_1 = pyaudio.paInt16 # 16-bit resolution
 chans = 1 # 1 channel
@@ -37,6 +38,13 @@ SHORT_NORMALIZE = (1.0/32768.0)
 
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 # create pyaudio stream
+#domain name or server ip:
+ftp = FTP('ftp.lumenir-innovations.com')
+
+def placeFile(myfile):
+
+    print(ftp.storbinary('STOR '+myfile, open(myfile, 'rb')))
+
 
 def find_input_device():
     device_index = None            
@@ -102,8 +110,31 @@ dots_total_seconds = int(mute_tolerance/100)
 count_when_trigger = 0
 count_when_trigger_dots = 0
 
+print (ftp.login(user='waterleak@lumenir-innovations.com', passwd = 'Lumen!r710!'))
+data = []
+ftp.dir(data.append)
+
+
+create_ftp_user_folder = False
+
+for line in data:
+    print ("-", line)
+    if user_folder_name in line:
+        print ("User folder exists, folder will not be created")
+        create_ftp_user_folder = False
+    else:
+        create_ftp_user_folder = True
+
+
+if create_ftp_user_folder:
+    print ('User folder doesnt exists, creating',user_folder_name,'folder')
+    print (ftp.mkd(user_folder_name))
+    create_ftp_user_folder = False
+
+ftp.cwd('/'+user_folder_name+'/')
+
 while True:
-    
+
     try:
         data = stream.read(INPUT_FRAMES_PER_BLOCK, exception_on_overflow = False)
     except IOError as e:
@@ -148,13 +179,17 @@ while True:
         if count-mute_tolerance > USER_REC_LENGHT:
             append_samples = False
             # save the audio frames as .wav file
-            wavefile = wave.open(user_folder_name+'/'+filename_audio,'wb')
+            wavefile = wave.open(filename_audio,'wb')
+            #wavefile = wave.open(user_folder_name+'/'+filename_audio,'wb')
             wavefile.setnchannels(chans)
             wavefile.setsampwidth(audio.get_sample_size(form_1))
             wavefile.setframerate(samp_rate)
             wavefile.writeframes(b''.join(frames))
             wavefile.close()
             print("New file saved: ", filename_audio, count)
+            print(placeFile(filename_audio))
+
+
             frames.clear()
             build_new_file_exists = False
             count = 0
@@ -178,6 +213,7 @@ print("finished recording")
 stream.stop_stream()
 stream.close()
 audio.terminate()
+ftp.quit()
 
 
 
