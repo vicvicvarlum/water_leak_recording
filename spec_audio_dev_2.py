@@ -2,7 +2,7 @@
 #pipwin install pyaudio
 
 #User folder to be created/store the files, dont use blank spaces
-user_folder_name = 'wilber'
+user_folder_name = 'wilber2'
 #seconds of tolerance to continue adding samples after the threshold has been reached
 user_mute_tolerance = 5
 #RMS Threshold
@@ -10,7 +10,6 @@ THRESHOLD = 0.05
 #Min recording lenght (seconds), avoids false triggers
 REC_LENGHT = 5
 
-from typing import Tuple
 import pyaudio
 import wave
 import math
