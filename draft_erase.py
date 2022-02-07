@@ -1,9 +1,7 @@
 #pip install pipwin
 #pipwin install pyaudio
 
-
-
-
+print (ftp.login(user='waterleak@lumenir-innovations.com', passwd = 'Lumen!r710!'))
 
 
 
@@ -20,11 +18,11 @@ INPUT_FRAMES_PER_BLOCK = int(RATE*INPUT_BLOCK_TIME)
 audio = pyaudio.PyAudio() # create pyaudio instantiation
 # create pyaudio stream
 #domain name or server ip:
-ftp = FTP('ftp.lumenir-innovations.com')
+
 
 def placeFile(myfile):
 
-    print(ftp.storbinary('STOR '+myfile, open(myfile, 'rb')))
+    
 
 
 def find_input_device():
@@ -68,7 +66,7 @@ seconds_to_sample = 20 * 100 #in seconds first arg
 filename_audio = ""
 
 
-print (ftp.login(user='waterleak@lumenir-innovations.com', passwd = 'Lumen!r710!'))
+
 data = []
 ftp.dir(data.append)
 
@@ -105,7 +103,7 @@ print("finished recording")
 stream.stop_stream()
 stream.close()
 audio.terminate()
-ftp.quit()
+
 
 
 

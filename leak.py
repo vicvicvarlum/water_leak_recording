@@ -1,21 +1,21 @@
+import ftplib
 import pyaudio
 import wave
 import math
 import struct
 import time
 import os, errno
-#from ftplib import FTP
+from ftplib import FTP
 
 #User folder to be created/store the files, dont use blank spaces TODO: remove blank spaces
 #Folder to be used at local and FTP
-USER_FOLDER_NAME = 'wilber'
+USER_FOLDER_NAME = 'victor_rel'
 #seconds of tolerance to continue adding samples after the threshold has been reached
 USER_MUTE_TOLERANCE = 5
 #RMS Threshold to start recording
 THRESHOLD = 0.05
 #Minimun recording lenght (seconds), avoids false triggers
-USER_REC_LENGHT = 5
-
+USER_REC_LENGHT = 2
 #Py audio instance variables
 FORM_1 = pyaudio.paInt16 # 16-bit resolution
 CHANS = 1 # 1 channel
@@ -54,7 +54,7 @@ class Leak(object):
         self.errorcount = 0
 
         #Calculations per user input (time base are x1 miliseconds)
-        self.mute_tolerance = USER_MUTE_TOLERANCE * 100 +100 #seconds // Added +100 to downcount including starting point
+        self.mute_tolerance = USER_MUTE_TOLERANCE * 100 #seconds 
         self.min_rec_lenth = USER_REC_LENGHT * 100
         #Operation and system variables 
         self.filename_audio = ""
@@ -68,12 +68,26 @@ class Leak(object):
 
         self.dots_mute_tolerance_counter = 0
         self.dots_total_seconds = int(self.mute_tolerance/100)
-        
+
+        self.ftp = FTP('ftp.lumenir-innovations.com')
+        self.folders_ftp = []
+        self.create_ftp_user_folder = False
+        self.already_in_folder = False
+
+        print ("Starting a new instance")
+
+
+        #try:
+        #    os.makedirs(USER_FOLDER_NAME)
+        #except OSError as e:
+        #    if e.errno != errno.EEXIST:
+        #       raise
+    
     def stop(self):
         self.stream.close()
 
     def open_mic_stream( self ):
-        device_index = 1
+        device_index = 1 #TODO: method to automate selection
 
         stream = self.pa.open(   format = FORM_1,
                                  channels = CHANS,
@@ -125,20 +139,71 @@ class Leak(object):
                 self.append_samples = False
                 # save the audio frames as .wav file
                 wavefile = wave.open(self.filename_audio,'wb')
-                #wavefile = wave.open(user_folder_name+'/'+filename_audio,'wb')
+                #wavefile = wave.open(USER_FOLDER_NAME+'/'+self.filename_audio,'wb')
                 wavefile.setnchannels(CHANS)
                 wavefile.setsampwidth(self.pa.get_sample_size(FORM_1))
                 wavefile.setframerate(SAMP_RATE)
                 wavefile.writeframes(b''.join(self.frames))
                 wavefile.close()
-                print("New file saved: ", self.filename_audio, self.count)
-                #print(placeFile(filename_audio))
+                print("New file saved: ", self.filename_audio," total time (mS): ", self.count - self.mute_tolerance)
 
+                """""
+                try:
+                    print (self.ftp.login(user='waterleak@lumenir-innovations.com', passwd = 'Lumen!r710!'))
+                except ftplib.all_errors as e:
+                    print ("Already logged in?: ", e)
+
+                try:
+                    self.ftp.dir(self.folders_ftp.append)
+
+                    for line in self.folders_ftp:
+                        print ("-", line)
+                        if USER_FOLDER_NAME in line:
+                            None
+                            #print ("User folder exists, folder will not be created")
+                            self.create_ftp_user_folder = False
+                            break
+                        else:
+                            #print ('User folder doesnt exists, creating',USER_FOLDER_NAME,'folder')
+                            self.create_ftp_user_folder = True
+                    
+                    if self.create_ftp_user_folder == True:
+                        print ("To create new folder on ftp")
+                        print (self.ftp.mkd(USER_FOLDER_NAME))
+                        print ("My new created directoty is" , self.ftp.pwd())
+                        self.create_ftp_user_folder = False
+                        print (self.ftp.cwd(USER_FOLDER_NAME))
+                        self.already_in_folder = True
+                    else:
+                        print ("No need for changing directory, my directory is: ", self.ftp.pwd())
+                        None
+                        #print (self.ftp.pwd())
+                        #if self.ftp.pwd()==USER_FOLDER_NAME:
+                        #    print("Already infolder")
+                        #else:
+                        #    print ("Working folder is", self.ftp.cwd(USER_FOLDER_NAME))
+
+                    if self.already_in_folder == True:
+                        None
+                    else:
+                        print (self.ftp.cwd(USER_FOLDER_NAME))
+                        self.already_in_folder = True
+
+                    print (self.ftp.storbinary('STOR '+self.filename_audio, open(self.filename_audio, 'rb')))
+                    self.ftp.close()
+                    return
+ 
+                    
+                except ftplib.all_errors as e:
+                    print ("Error uploading: ", e)
+                    self.ftp.close()
+                    return
 
                 self.frames.clear()
                 self.build_new_file_exists = False
                 self.count = 0
                 self.dots_mute_tolerance_counter = 0
+                """
             else:
                 print("No file created, false trigger", self.count)
                 self.frames.clear()

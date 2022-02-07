@@ -123,6 +123,7 @@ for line in data:
         create_ftp_user_folder = False
     else:
         create_ftp_user_folder = True
+        print ("User fol")
 
 
 if create_ftp_user_folder:
